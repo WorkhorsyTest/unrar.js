@@ -2,12 +2,10 @@
 # Makefile for UNIX - unrar
 
 # Linux using GCC
-CXX=c++
-CXXFLAGS=-O2
-LIBFLAGS=-fPIC
-DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP
-STRIP=strip
-AR=ar
+CXX=em++
+CXXFLAGS=-O2 -s WASM=1
+LIBFLAGS=
+DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 LDFLAGS=-pthread
 DESTDIR=/usr
 
@@ -29,7 +27,7 @@ DESTDIR=/usr
 
 # IRIX using GCC
 #CXX=g++
-#CXXFLAGS=-O2 
+#CXXFLAGS=-O2
 #DEFINES=-DBIG_ENDIAN -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_BSD_COMPAT -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1
 #STRIP=strip
 #AR=ar
@@ -121,7 +119,7 @@ OBJECTS=rar.o strlist.o strfn.o pathfn.o smallfn.o global.o file.o filefn.o filc
 .cpp.o:
 	$(COMPILE) -D$(WHAT) -c $<
 
-all:	unrar
+all:	unrar.html
 
 install:	install-unrar
 
@@ -129,17 +127,18 @@ uninstall:	uninstall-unrar
 
 clean:
 	@rm -f *.o *.bak *~
-
-unrar:	clean $(OBJECTS) $(UNRAR_OBJ)
 	@rm -f unrar
-	$(LINK) -o unrar $(LDFLAGS) $(OBJECTS) $(UNRAR_OBJ) $(LIBS)	
-	$(STRIP) unrar
+	@rm -f unrar.js
+	@rm -rf unrar.html
+
+unrar.html:	clean $(OBJECTS) $(UNRAR_OBJ)
+	@rm -f unrar.html
+	$(LINK) -o unrar.html $(LDFLAGS) $(OBJECTS) $(UNRAR_OBJ) $(LIBS)
 
 sfx:	WHAT=SFX_MODULE
 sfx:	clean $(OBJECTS)
 	@rm -f default.sfx
 	$(LINK) -o default.sfx $(LDFLAGS) $(OBJECTS)
-	$(STRIP) default.sfx
 
 lib:	WHAT=RARDLL
 lib:	CXXFLAGS+=$(LIBFLAGS)
