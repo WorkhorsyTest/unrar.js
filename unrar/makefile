@@ -2,7 +2,7 @@
 
 # WebAssembly using Emscripten
 CXX=em++
-CXXFLAGS=-O2
+CXXFLAGS=-O2 -std=c++98
 DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 LDFLAGS=-pthread -s WASM=1
 
@@ -28,4 +28,4 @@ clean:
 
 unrar.html:	clean $(OBJECTS) $(UNRAR_OBJ)
 	@rm -f unrar.html
-	$(CXX) -o unrar.html $(LDFLAGS) $(OBJECTS) $(UNRAR_OBJ) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o unrar.html $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)

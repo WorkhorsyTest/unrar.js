@@ -1,8 +1,39 @@
 #include "rar.hpp"
 
+#include "example.h"
+#include <fstream>
+#include <string>
+#include <vector>
+#include <iostream>
+
 #if !defined(RARDLL)
 int main(int argc, char *argv[])
 {
+/*
+	// Copy the data array to a file
+  std::ifstream in_file("example.rar", std::ifstream::binary);
+	for (int i=0; i<rar_file_data_length; ++i) {
+		//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
+		in_file << (rar_file_data[i]);
+	}
+	in_file.close();
+*/
+	std::cout << "argc: " << argc << std::endl;
+	for (int i=0; i<argc; ++i) {
+		std::cout << "    argv[" << i << "]: " << argv[i] << std::endl;
+	}
+
+	// Add our own args, instead of using argc/argv
+	std::vector<char*> args;
+	args.push_back(argv[0]);
+	args.push_back("x");
+	args.push_back("-y");
+	args.push_back("example.rar");
+
+	std::cout << "args: " << args.size() << std::endl;
+	for (int i=0; i<args.size(); ++i) {
+		std::cout << "    args[" << i << "]: " << args[i] << std::endl;
+	}
 
 #ifdef _UNIX
   setlocale(LC_ALL,"");
@@ -16,7 +47,7 @@ int main(int argc, char *argv[])
 #ifdef _WIN_ALL
   GetModuleFileName(NULL,ModuleName,ASIZE(ModuleName));
 #else
-  CharToWide(argv[0],ModuleName,ASIZE(ModuleName));
+  CharToWide(args[0].c_str(),ModuleName,ASIZE(ModuleName));
 #endif
 #endif
 
@@ -32,13 +63,13 @@ int main(int argc, char *argv[])
   bool ShutdownOnClose=false;
 #endif
 
-  try 
+  try
   {
-  
+
     CommandData *Cmd=new CommandData;
 #ifdef SFX_MODULE
     wcscpy(Cmd->Command,L"X");
-    char *Switch=argc>1 ? argv[1]:NULL;
+    char *Switch=args.size()>1 ? args[1].c_str():NULL;
     if (Switch!=NULL && Cmd->IsSwitch(Switch[0]))
     {
       int UpperCmd=etoupper(Switch[1]);
@@ -57,13 +88,13 @@ int main(int argc, char *argv[])
     Cmd->ParseDone();
     Cmd->AbsoluteLinks=true; // If users runs SFX, he trusts an archive source.
 #else // !SFX_MODULE
-    Cmd->ParseCommandLine(true,argc,argv);
+    Cmd->ParseCommandLine(true,args.size(), (args.data()));
     if (!Cmd->ConfigDisabled)
     {
       Cmd->ReadConfig();
       Cmd->ParseEnvVar();
     }
-    Cmd->ParseCommandLine(false,argc,argv);
+    Cmd->ParseCommandLine(false,args.size(),args.data());
 #endif
 
 #if defined(_WIN_ALL) && !defined(SFX_MODULE)
@@ -101,5 +132,3 @@ int main(int argc, char *argv[])
   return ErrHandler.GetErrorCode();
 }
 #endif
-
-
