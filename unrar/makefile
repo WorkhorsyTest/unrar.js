@@ -2,9 +2,9 @@
 
 # WebAssembly using Emscripten
 CXX=em++
-CXXFLAGS=-O2 -std=c++98
+CXXFLAGS=-O2 -std=c++11
 DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-LDFLAGS=-pthread -s WASM=1
+LDFLAGS=-pthread -s WASM=1 -s FORCE_FILESYSTEM=1 -s ASSERTIONS=1
 
 ##########################
 

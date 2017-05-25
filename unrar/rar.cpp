@@ -6,22 +6,23 @@
 #include <vector>
 #include <iostream>
 
+
 #if !defined(RARDLL)
 int main(int argc, char *argv[])
 {
-/*
+
 	// Copy the data array to a file
-  std::ifstream in_file("example.rar", std::ifstream::binary);
+  std::ofstream out_file("example.rar", std::ifstream::binary);
 	for (int i=0; i<rar_file_data_length; ++i) {
 		//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
-		in_file << (rar_file_data[i]);
+		out_file << (rar_file_data[i]);
 	}
-	in_file.close();
-*/
-	std::cout << "argc: " << argc << std::endl;
-	for (int i=0; i<argc; ++i) {
-		std::cout << "    argv[" << i << "]: " << argv[i] << std::endl;
-	}
+	out_file.close();
+
+	// Print the size of the rar file from the file system
+	std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
+	std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
+	size_file.close();
 
 	// Add our own args, instead of using argc/argv
 	std::vector<char*> args;
@@ -30,6 +31,7 @@ int main(int argc, char *argv[])
 	args.push_back("-y");
 	args.push_back("example.rar");
 
+	// Print all the args
 	std::cout << "args: " << args.size() << std::endl;
 	for (int i=0; i<args.size(); ++i) {
 		std::cout << "    args[" << i << "]: " << args[i] << std::endl;
@@ -128,6 +130,65 @@ int main(int argc, char *argv[])
   if (ShutdownOnClose && ErrHandler.IsShutdownEnabled())
     Shutdown();
 #endif
+/*
+	if (rename ("page 005.png", "page005.png") != 0) {
+		perror ("!!! failed to rename file");
+		return EXIT_FAILURE;
+	}
+*/
+	// Print all the entries in the file system
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (".")) != NULL) {
+	  /* print all the files and directories within directory */
+	  while ((ent = readdir (dir)) != NULL) {
+	    printf ("!!! %s\n", ent->d_name);
+	  }
+	  closedir (dir);
+	} else {
+	  /* could not open directory */
+	  perror ("!!! Failed to open directory");
+	  return EXIT_FAILURE;
+	}
+/*
+	// Print the size of a file in the file system
+	FILE *fp;
+	fp = fopen("fuck", "wb");
+	if (fp == NULL) {
+		perror ("!!! Failed to open file");
+	  return EXIT_FAILURE;
+	}
+
+	char x[]="ABCDEFGHIJ";
+	fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
+	fclose(fp);
+
+	fp = fopen("fuck", "rb");
+	if (fp == NULL) {
+		perror ("!!! Failed to open file");
+	  return EXIT_FAILURE;
+	}
+
+	unsigned char buffer; // note: 1 byte
+	fread(&buffer, 1, 1, fp);
+	std::cout << "!!! buffer: " << (int) buffer << std::endl;
+	fclose(fp);
+*/
+
+	// https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
+	// FIXME: This gives Permission denied.
+	// Make sure unrar closes the file handle
+	FILE *fp = fopen("page 001.png", "r");
+	if (fp == NULL) {
+		perror ("!!! Failed to open file");
+		return EXIT_FAILURE;
+	}
+
+	unsigned char buffer; // note: 1 byte
+	fread(&buffer, 1, 1, fp);
+	std::cout << "!!! buffer: " << (int) buffer << std::endl;
+	fclose(fp);
+
   ErrHandler.MainExit=true;
   return ErrHandler.GetErrorCode();
 }
