@@ -1,104 +1,11 @@
-#
-# Makefile for UNIX - unrar
 
-# Linux using GCC
+
+# WebAssembly using Emscripten
 CXX=em++
 CXXFLAGS=-O2 -s WASM=1
 LIBFLAGS=
 DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 LDFLAGS=-pthread
-DESTDIR=/usr
-
-# Linux using LCC
-#CXX=lcc
-#CXXFLAGS=-O2
-#DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# HP UX using aCC
-#CXX=aCC
-#CXXFLAGS=-AA +O2 +Onolimit
-#DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# IRIX using GCC
-#CXX=g++
-#CXXFLAGS=-O2
-#DEFINES=-DBIG_ENDIAN -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_BSD_COMPAT -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# IRIX using MIPSPro (experimental)
-#CXX=CC
-#CXXFLAGS=-O2 -mips3 -woff 1234,1156,3284 -LANG:std
-#DEFINES=-DBIG_ENDIAN -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_BSD_COMPAT -Dint64=int64_t
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# AIX using xlC (IBM VisualAge C++ 5.0)
-#CXX=xlC
-#CXXFLAGS=-O -qinline -qro -qroconst -qmaxmem=16384 -qcpluscmt
-#DEFINES=-D_LARGE_FILES -D_LARGE_FILE_API
-#LIBS=-lbsd
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# Solaris using CC
-#CXX=CC
-#CXXFLAGS=-fast -erroff=wvarhidemem
-#DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-#STRIP=strip
-#AR=ar
-#DESTDIR=/usr
-
-# Solaris using GCC (optimized for UltraSPARC 1 CPU)
-#CXX=g++
-#CXXFLAGS=-O3 -mcpu=v9 -mtune=ultrasparc -m32
-#DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-#STRIP=/usr/ccs/bin/strip
-#AR=/usr/ccs/bin/ar
-#DESTDIR=/usr
-
-# Tru64 5.1B using GCC3
-#CXX=g++
-#CXXFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_XOPEN_SOURCE=500
-#STRIP=strip
-#AR=ar
-#LDFLAGS=-rpath /usr/local/gcc/lib
-#DESTDIR=/usr
-
-# Tru64 5.1B using DEC C++
-#CXX=cxx
-#CXXFLAGS=-O4 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Dint64=long
-#STRIP=strip
-#AR=ar
-#LDFLAGS=
-#DESTDIR=/usr
-
-# QNX 6.x using GCC
-#CXX=g++
-#CXXFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -fexceptions
-#STRIP=strip
-#AR=ar
-#LDFLAGS=-fexceptions
-#DESTDIR=/usr
-
-# Cross-compile
-# Linux using arm-linux-g++
-#CXX=arm-linux-g++
-#CXXFLAGS=-O2
-#DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-#STRIP=arm-linux-strip
-#AR=arm-linux-ar
-#LDFLAGS=-static
-#DESTDIR=/usr
 
 ##########################
 
@@ -121,10 +28,6 @@ OBJECTS=rar.o strlist.o strfn.o pathfn.o smallfn.o global.o file.o filefn.o filc
 
 all:	unrar.html
 
-install:	install-unrar
-
-uninstall:	uninstall-unrar
-
 clean:
 	@rm -f *.o *.bak *~
 	@rm -f unrar
@@ -135,11 +38,6 @@ unrar.html:	clean $(OBJECTS) $(UNRAR_OBJ)
 	@rm -f unrar.html
 	$(LINK) -o unrar.html $(LDFLAGS) $(OBJECTS) $(UNRAR_OBJ) $(LIBS)
 
-sfx:	WHAT=SFX_MODULE
-sfx:	clean $(OBJECTS)
-	@rm -f default.sfx
-	$(LINK) -o default.sfx $(LDFLAGS) $(OBJECTS)
-
 lib:	WHAT=RARDLL
 lib:	CXXFLAGS+=$(LIBFLAGS)
 lib:	clean $(OBJECTS) $(LIB_OBJ)
@@ -147,16 +45,3 @@ lib:	clean $(OBJECTS) $(LIB_OBJ)
 	@rm -f libunrar.a
 	$(LINK) -shared -o libunrar.so $(LDFLAGS) $(OBJECTS) $(LIB_OBJ)
 	$(AR) rcs libunrar.a $(OBJECTS) $(LIB_OBJ)
-
-install-unrar:
-			install -D unrar $(DESTDIR)/bin/unrar
-
-uninstall-unrar:
-			rm -f $(DESTDIR)/bin/unrar
-
-install-lib:
-		install libunrar.so $(DESTDIR)/lib
-		install libunrar.a $(DESTDIR)/lib
-
-uninstall-lib:
-		rm -f $(DESTDIR)/lib/libunrar.so
