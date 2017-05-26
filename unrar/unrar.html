@@ -129,9 +129,11 @@
 
 		<input id="fileupload" type="file" />
 
-		<button id="button_load_rar_file">Load RAR File</button>
+		<button id="button_extract_files">Extract Files</button>
 
-		<button id="button_open_uncompressed_file">Open Uncompressed File</button>
+		<button id="button_list_extracted_files">List Extracted Files</button>
+
+		<button id="button_open_extracted_file">Open Extracted File</button>
 
     <script type='text/javascript'>
       var statusElement = document.getElementById('status');
@@ -152,14 +154,20 @@
 				fileReader.readAsArrayBuffer(this.files[0]);
 			}, false);
 
-			var button_load_rar_file = document.getElementById('button_load_rar_file');
-			button_load_rar_file.addEventListener('click', function() {
-				Module.load_rar_file();
+			var button_extract_files = document.getElementById('button_extract_files');
+			button_extract_files.addEventListener('click', function() {
+				Module.extract_files();
 			}, false);
 
-      var button_open_uncompressed_file = document.getElementById('button_open_uncompressed_file');
-			button_open_uncompressed_file.addEventListener('click', function() {
-				Module.open_uncompressed_file();
+      var button_open_extracted_file = document.getElementById('button_open_extracted_file');
+			button_open_extracted_file.addEventListener('click', function() {
+				Module.open_extracted_file();
+			}, false);
+
+
+			var button_list_extracted_files = document.getElementById('button_list_extracted_files');
+			button_list_extracted_files.addEventListener('click', function() {
+				Module.list_extracted_files();
 			}, false);
 
       var Module = {

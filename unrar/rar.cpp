@@ -17,7 +17,7 @@ void set_g_data_value(size_t index, uint8_t value) {
 	g_data[index] = value;
 }
 
-int load_rar_file() {
+int extract_files() {
 	// Copy the data array to a file
   std::ofstream out_file("example.rar", std::ifstream::binary);
 	for (int i=0; i<g_data.size(); ++i) {
@@ -173,7 +173,7 @@ int load_rar_file() {
   return ErrHandler.GetErrorCode();
 }
 
-int open_uncompressed_file() {
+int list_extracted_files() {
 	// Print all the entries in the file system
 	DIR *dir;
 	struct dirent *ent;
@@ -189,7 +189,10 @@ int open_uncompressed_file() {
 	  return EXIT_FAILURE;
 	}
 
+	return 0;
+}
 
+int open_extracted_file() {
 	// https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
 	// FIXME: This gives Permission denied.
 	// Make sure unrar closes the file handle
@@ -208,10 +211,11 @@ int open_uncompressed_file() {
 }
 
 EMSCRIPTEN_BINDINGS(Wrappers) {
-	emscripten::function("load_rar_file", &load_rar_file);
-	emscripten::function("open_uncompressed_file", &open_uncompressed_file);
 	emscripten::function("set_g_data_size", &set_g_data_size);
 	emscripten::function("set_g_data_value", &set_g_data_value);
+	emscripten::function("extract_files", &extract_files);
+	emscripten::function("list_extracted_files", &list_extracted_files);
+	emscripten::function("open_extracted_file", &open_extracted_file);
 };
 
 void on_main_loop() {
