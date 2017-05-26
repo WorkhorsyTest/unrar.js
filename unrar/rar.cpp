@@ -137,37 +137,6 @@ int extract_files() {
   if (ShutdownOnClose && ErrHandler.IsShutdownEnabled())
     Shutdown();
 #endif
-/*
-	if (rename ("page 005.png", "page005.png") != 0) {
-		perror ("!!! failed to rename file");
-		return EXIT_FAILURE;
-	}
-*/
-
-/*
-	// Print the size of a file in the file system
-	FILE *fp;
-	fp = fopen("fuck", "wb");
-	if (fp == NULL) {
-		perror ("!!! Failed to open file");
-	  return EXIT_FAILURE;
-	}
-
-	char x[]="ABCDEFGHIJ";
-	fwrite(x, sizeof(x[0]), sizeof(x)/sizeof(x[0]), fp);
-	fclose(fp);
-
-	fp = fopen("fuck", "rb");
-	if (fp == NULL) {
-		perror ("!!! Failed to open file");
-	  return EXIT_FAILURE;
-	}
-
-	unsigned char buffer; // note: 1 byte
-	fread(&buffer, 1, 1, fp);
-	std::cout << "!!! buffer: " << (int) buffer << std::endl;
-	fclose(fp);
-*/
 
   ErrHandler.MainExit=true;
   return ErrHandler.GetErrorCode();
