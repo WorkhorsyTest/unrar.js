@@ -1,6 +1,5 @@
 #include "rar.hpp"
 
-#include "example.h"
 #include <fstream>
 #include <string>
 #include <vector>
@@ -8,13 +7,22 @@
 #include <emscripten.h>
 #include <emscripten/bind.h>
 
+std::vector<uint8_t> g_data;
+
+void set_g_data_size(size_t size) {
+	g_data.resize(size);
+}
+
+void set_g_data_value(size_t index, uint8_t value) {
+	g_data[index] = value;
+}
 
 int load_rar_file() {
 	// Copy the data array to a file
   std::ofstream out_file("example.rar", std::ifstream::binary);
-	for (int i=0; i<rar_file_data_length; ++i) {
+	for (int i=0; i<g_data.size(); ++i) {
 		//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
-		out_file << (rar_file_data[i]);
+		out_file << (g_data[i]);
 	}
 	out_file.close();
 
@@ -202,6 +210,8 @@ int open_uncompressed_file() {
 EMSCRIPTEN_BINDINGS(Wrappers) {
 	emscripten::function("load_rar_file", &load_rar_file);
 	emscripten::function("open_uncompressed_file", &open_uncompressed_file);
+	emscripten::function("set_g_data_size", &set_g_data_size);
+	emscripten::function("set_g_data_value", &set_g_data_value);
 };
 
 void on_main_loop() {

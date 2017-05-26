@@ -127,6 +127,8 @@
     </div>
     <textarea id="output" rows="8"></textarea>
 
+		<input id="fileupload" type="file" />
+
 		<button id="button_load_rar_file">Load RAR File</button>
 
 		<button id="button_open_uncompressed_file">Open Uncompressed File</button>
@@ -135,6 +137,20 @@
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
+
+			var fileupload = document.getElementById('fileupload');
+			fileupload.addEventListener('change', function(event) {
+				var fileReader = new FileReader();
+				fileReader.onload = function() {
+					let file_data  = new Uint8Array(this.result);
+					Module.set_g_data_size(file_data.length);
+					for (let i=0; i<file_data.length; ++i) {
+						Module.set_g_data_value(i, file_data[i]);
+					}
+					alert("Done!");
+				};
+				fileReader.readAsArrayBuffer(this.files[0]);
+			}, false);
 
 			var button_load_rar_file = document.getElementById('button_load_rar_file');
 			button_load_rar_file.addEventListener('click', function() {
