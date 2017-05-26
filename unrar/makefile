@@ -4,7 +4,7 @@
 CXX=em++
 CXXFLAGS=-O2 -std=c++11
 DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-LDFLAGS=-pthread -s WASM=1 -s FORCE_FILESYSTEM=1 -s ASSERTIONS=1
+LDFLAGS=-pthread -s WASM=1 --bind -s FORCE_FILESYSTEM=1 -s ASSERTIONS=1
 
 ##########################
 
@@ -17,15 +17,13 @@ OBJECTS=rar.o strlist.o strfn.o pathfn.o smallfn.o global.o file.o filefn.o filc
   list.o find.o unpack.o headers.o threadpool.o rs16.o cmddata.o ui.o
 
 
-all:	unrar.html
+all:	unrar.js
 
 clean:
 	@rm -f *.o *.bak *~
 	@rm -f unrar
 	@rm -f unrar.js
 	@rm -f unrar.wasm
-	@rm -f unrar.html
 
-unrar.html:	clean $(OBJECTS) $(UNRAR_OBJ)
-	@rm -f unrar.html
-	$(CXX) $(CXXFLAGS) -o unrar.html $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)
+unrar.js:	clean $(OBJECTS) $(UNRAR_OBJ)
+	$(CXX) $(CXXFLAGS) -o unrar.js $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)

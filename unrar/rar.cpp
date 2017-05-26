@@ -4,13 +4,12 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <iostream>
+
+#include <emscripten.h>
+#include <emscripten/bind.h>
 
 
-#if !defined(RARDLL)
-int main(int argc, char *argv[])
-{
-
+int load_rar_file() {
 	// Copy the data array to a file
   std::ofstream out_file("example.rar", std::ifstream::binary);
 	for (int i=0; i<rar_file_data_length; ++i) {
@@ -26,7 +25,7 @@ int main(int argc, char *argv[])
 
 	// Add our own args, instead of using argc/argv
 	std::vector<char*> args;
-	args.push_back(argv[0]);
+	args.push_back("./this.program");
 	args.push_back("x");
 	args.push_back("-y");
 	args.push_back("example.rar");
@@ -136,20 +135,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 */
-	// Print all the entries in the file system
-	DIR *dir;
-	struct dirent *ent;
-	if ((dir = opendir (".")) != NULL) {
-	  /* print all the files and directories within directory */
-	  while ((ent = readdir (dir)) != NULL) {
-	    printf ("!!! %s\n", ent->d_name);
-	  }
-	  closedir (dir);
-	} else {
-	  /* could not open directory */
-	  perror ("!!! Failed to open directory");
-	  return EXIT_FAILURE;
-	}
+
 /*
 	// Print the size of a file in the file system
 	FILE *fp;
@@ -175,10 +161,31 @@ int main(int argc, char *argv[])
 	fclose(fp);
 */
 
+  ErrHandler.MainExit=true;
+  return ErrHandler.GetErrorCode();
+}
+
+int open_uncompressed_file() {
+	// Print all the entries in the file system
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (".")) != NULL) {
+	  /* print all the files and directories within directory */
+	  while ((ent = readdir (dir)) != NULL) {
+	    printf ("!!! %s\n", ent->d_name);
+	  }
+	  closedir (dir);
+	} else {
+	  /* could not open directory */
+	  perror ("!!! Failed to open directory");
+	  return EXIT_FAILURE;
+	}
+
+
 	// https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
 	// FIXME: This gives Permission denied.
 	// Make sure unrar closes the file handle
-	FILE *fp = fopen("page 001.png", "r");
+	FILE *fp = fopen("page 004.png", "r");
 	if (fp == NULL) {
 		perror ("!!! Failed to open file");
 		return EXIT_FAILURE;
@@ -189,7 +196,24 @@ int main(int argc, char *argv[])
 	std::cout << "!!! buffer: " << (int) buffer << std::endl;
 	fclose(fp);
 
-  ErrHandler.MainExit=true;
-  return ErrHandler.GetErrorCode();
+	return 0;
+}
+
+EMSCRIPTEN_BINDINGS(Wrappers) {
+	emscripten::function("load_rar_file", &load_rar_file);
+	emscripten::function("open_uncompressed_file", &open_uncompressed_file);
+};
+
+void on_main_loop() {
+
+}
+
+#if !defined(RARDLL)
+int main(int argc, char *argv[])
+{
+	emscripten_set_main_loop(on_main_loop, 0, true);
+
+	ErrHandler.MainExit=true;
+	return ErrHandler.GetErrorCode();
 }
 #endif

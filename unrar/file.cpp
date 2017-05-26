@@ -2,6 +2,7 @@
 
 File::File()
 {
+	std::cout << "!!! File::File()" << std::endl;
   hFile=FILE_BAD_HANDLE;
   *FileName=0;
   NewFile=false;
@@ -22,6 +23,16 @@ File::File()
 
 File::~File()
 {
+	std::wstringstream ss;
+	ss <<
+		"!!! File::~File()" <<
+		", FileName: " << FileName <<
+		", SkipClose: " << SkipClose <<
+		", NewFile: " << NewFile <<
+		", hFile: " << hFile <<
+		std::endl;
+	std::wcout << ss.str();
+
   if (hFile!=FILE_BAD_HANDLE && !SkipClose)
     if (NewFile)
       Delete();
@@ -33,6 +44,7 @@ File::~File()
 void File::operator = (File &SrcFile)
 {
   hFile=SrcFile.hFile;
+	std::wcout << "File::operator =, hFile: " << hFile << std::endl;
   NewFile=SrcFile.NewFile;
   LastWrite=SrcFile.LastWrite;
   HandleType=SrcFile.HandleType;
@@ -43,6 +55,11 @@ void File::operator = (File &SrcFile)
 
 bool File::Open(const wchar *Name,uint Mode)
 {
+
+	std::wstringstream ss;
+	ss << "!!! File::Open: " << Name << std::endl;
+	std::wcout << ss.str();
+
   ErrorType=FILE_SUCCESS;
   FileHandle hNewFile;
   bool OpenShared=File::OpenShared || (Mode & FMF_OPENSHARED)!=0;
@@ -157,6 +174,10 @@ bool File::WOpen(const wchar *Name)
 
 bool File::Create(const wchar *Name,uint Mode)
 {
+	std::wstringstream ss;
+	ss << "!!! File::Create: " << Name << std::endl;
+	std::wcout << ss.str();
+
   // OpenIndiana based NAS and CIFS shares fail to set the file time if file
   // was created in read+write mode and some data was written and not flushed
   // before SetFileTime call. So we should use the write only mode if we plan
@@ -172,7 +193,7 @@ bool File::Create(const wchar *Name,uint Mode)
   // So we detect such names and process them with \\?\ prefix.
   wchar *LastChar=PointToLastChar(Name);
   bool Special=*LastChar=='.' || *LastChar==' ';
-  
+
   if (Special)
     hFile=FILE_BAD_HANDLE;
   else
@@ -190,6 +211,7 @@ bool File::Create(const wchar *Name,uint Mode)
   WideToChar(Name,NameA,ASIZE(NameA));
 #ifdef FILE_USE_OPEN
   hFile=open(NameA,(O_CREAT|O_TRUNC) | (WriteMode ? O_WRONLY : O_RDWR),0666);
+	std::wcout << "    open, hFile: " << hFile << std::endl;
 #else
   hFile=fopen(NameA,WriteMode ? WRITEBINARY:CREATEBINARY);
 #endif
@@ -222,6 +244,7 @@ bool File::WCreate(const wchar *Name,uint Mode)
 
 bool File::Close()
 {
+	std::wcout << "File::Close::hFile: " << hFile << std::endl;
   bool Success=true;
 
   if (hFile!=FILE_BAD_HANDLE)
@@ -252,6 +275,7 @@ bool File::Close()
 
 bool File::Delete()
 {
+	std::wcout << "File::Delete::hFile: " << hFile << std::endl;
   if (HandleType!=FILE_HANDLENORMAL)
     return false;
   if (hFile!=FILE_BAD_HANDLE)
