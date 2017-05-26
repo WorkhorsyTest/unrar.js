@@ -116,6 +116,12 @@ bool File::Open(const wchar *Name,uint Mode)
   WideToChar(Name,NameA,ASIZE(NameA));
 
   int handle=open(NameA,flags);
+	ss.clear();
+	ss <<
+	">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> handle: " << handle <<
+	", FileName: " << Name <<
+	std::endl;
+	std::wcout << ss.str();
 #ifdef LOCK_EX
 
 #ifdef _OSF_SOURCE
@@ -124,6 +130,12 @@ bool File::Open(const wchar *Name,uint Mode)
 
   if (!OpenShared && UpdateMode && handle>=0 && flock(handle,LOCK_EX|LOCK_NB)==-1)
   {
+		ss.clear();
+		ss <<
+		"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< handle: " << handle <<
+		", FileName: " << Name <<
+		std::endl;
+		std::wcout << ss.str();
     close(handle);
     return false;
   }
@@ -211,7 +223,12 @@ bool File::Create(const wchar *Name,uint Mode)
   WideToChar(Name,NameA,ASIZE(NameA));
 #ifdef FILE_USE_OPEN
   hFile=open(NameA,(O_CREAT|O_TRUNC) | (WriteMode ? O_WRONLY : O_RDWR),0666);
-	std::wcout << "    open, hFile: " << hFile << std::endl;
+	ss.clear();
+	ss <<
+	">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> handle: " << hFile <<
+	", FileName: " << Name <<
+	std::endl;
+	std::wcout << ss.str();
 #else
   hFile=fopen(NameA,WriteMode ? WRITEBINARY:CREATEBINARY);
 #endif
@@ -258,6 +275,12 @@ bool File::Close()
         Success=CloseHandle(hFile)==TRUE;
 #else
 #ifdef FILE_USE_OPEN
+			std::wstringstream ss;
+			ss <<
+			"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< handle: " << hFile <<
+			", FileName: " << FileName <<
+			std::endl;
+			std::wcout << ss.str();
       Success=close(hFile)!=-1;
 #else
       Success=fclose(hFile)!=EOF;

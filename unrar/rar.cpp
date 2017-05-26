@@ -7,6 +7,12 @@
 #include <emscripten.h>
 #include <emscripten/bind.h>
 
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 std::vector<uint8_t> g_data;
 
 void set_g_data_size(size_t size) {
@@ -146,15 +152,29 @@ int list_extracted_files() {
 	// Print all the entries in the file system
 	DIR *dir;
 	struct dirent *ent;
+	struct stat buf;
+
 	if ((dir = opendir (".")) != NULL) {
-	  /* print all the files and directories within directory */
+	  // print all the files and directories within directory
 	  while ((ent = readdir (dir)) != NULL) {
-	    printf ("!!! %s\n", ent->d_name);
+			stat(ent->d_name, &buf);
+			printf ("!!! %s: ", ent->d_name);
+			printf( (S_ISDIR(buf.st_mode)) ? "d" : "-");
+			printf( (buf.st_mode & S_IRUSR) ? "r" : "-");
+			printf( (buf.st_mode & S_IWUSR) ? "w" : "-");
+			printf( (buf.st_mode & S_IXUSR) ? "x" : "-");
+			printf( (buf.st_mode & S_IRGRP) ? "r" : "-");
+			printf( (buf.st_mode & S_IWGRP) ? "w" : "-");
+			printf( (buf.st_mode & S_IXGRP) ? "x" : "-");
+			printf( (buf.st_mode & S_IROTH) ? "r" : "-");
+			printf( (buf.st_mode & S_IWOTH) ? "w" : "-");
+			printf( (buf.st_mode & S_IXOTH) ? "x" : "-");
+			printf("\n");
 	  }
 	  closedir (dir);
 	} else {
-	  /* could not open directory */
-	  perror ("!!! Failed to open directory");
+	  // could not open directory
+	  perror ("!!! Failed to open file/directory");
 	  return EXIT_FAILURE;
 	}
 
