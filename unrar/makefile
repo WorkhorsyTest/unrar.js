@@ -20,10 +20,13 @@ OBJECTS=rar.o strlist.o strfn.o pathfn.o smallfn.o global.o file.o filefn.o filc
 all:	unrar.js
 
 clean:
-	@rm -f *.o *.bak *~
+	@rm -f *.o
 	@rm -f unrar
+	@rm -f unrar.html.map
 	@rm -f unrar.js
+	@rm -f unrar.js.map
 	@rm -f unrar.wasm
+	@rm -f unrar.wast
 
 unrar.js:	clean $(OBJECTS) $(UNRAR_OBJ)
 	$(CXX) $(CXXFLAGS) -o unrar.js $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)
