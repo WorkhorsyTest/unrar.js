@@ -188,9 +188,7 @@ int open_extracted_file() {
 	  return EXIT_FAILURE;
 	}
 
-	// https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
-	// FIXME: This gives Permission denied.
-	// Make sure unrar closes the file handle
+	// Open the file
 	FILE *fp = fopen("page 004.png", "r");
 	if (fp == NULL) {
 		perror ("!!! Failed to open file");
