@@ -197,9 +197,23 @@ int open_extracted_file() {
 		return EXIT_FAILURE;
 	}
 
-	unsigned char buffer; // note: 1 byte
-	fread(&buffer, 1, 1, fp);
-	std::cout << "!!! buffer: " << (int) buffer << std::endl;
+	// Set the returned file size
+	fseek(fp, 0L, SEEK_END);
+	int sz = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+	EM_ASM_({
+		set_return_file_size($0);
+	}, sz);
+
+	// Send the file, one byte at a time
+	unsigned char buffer;
+	int i = 0;
+	while (fread(&buffer, 1, 1, fp)) {
+		EM_ASM_({
+	    set_return_file_data($0, $1);
+	  }, i, (int) buffer);
+		i++;
+	}
 	fclose(fp);
 
 	return 0;

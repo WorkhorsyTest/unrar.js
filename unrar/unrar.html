@@ -136,6 +136,23 @@
 		<button id="button_open_extracted_file">Open Extracted File</button>
 
     <script type='text/javascript'>
+			let g_return_file_data;
+			function set_return_file_size(size) {
+				g_return_file_data = new Uint8Array(size);
+			}
+			function set_return_file_data(index, data) {
+				//console.info(index, data);
+				g_return_file_data[index] = data;
+				if (index === g_return_file_data.length-1) {
+					let blob = new Blob([g_return_file_data], {'type': 'image/png'});
+					let url = URL.createObjectURL(blob);
+					console.log(url);
+
+					let img = document.createElement('img');
+					img.src = url;
+					document.body.appendChild(img);
+				}
+			}
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
@@ -149,7 +166,7 @@
 					for (let i=0; i<file_data.length; ++i) {
 						Module.set_g_data_value(i, file_data[i]);
 					}
-					alert("Done!");
+					//alert("Done!");
 				};
 				fileReader.readAsArrayBuffer(this.files[0]);
 			}, false);
