@@ -182,6 +182,12 @@ int list_extracted_files() {
 }
 
 int open_extracted_file() {
+	// Make the file readable
+	if (chmod("page 004.png", S_IRUSR|S_IRGRP|S_IROTH) == -1) {
+		perror ("!!! Failed to chown");
+	  return EXIT_FAILURE;
+	}
+
 	// https://www.sitepoint.com/getting-started-emscripten-transpiling-c-c-javascript-html5/
 	// FIXME: This gives Permission denied.
 	// Make sure unrar closes the file handle
