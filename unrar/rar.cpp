@@ -15,29 +15,6 @@
 
 std::vector<uint8_t> g_data;
 
-void unrar_set_g_data_size(size_t size) {
-	g_data.resize(size);
-}
-
-void unrar_set_g_data_value(size_t index, uint8_t value) {
-	g_data[index] = value;
-
-	if (index == g_data.size()-1) {
-		// Copy the data array to a file
-	  std::ofstream out_file("example.rar", std::ifstream::binary);
-		for (int i=0; i<g_data.size(); ++i) {
-			//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
-			out_file << (g_data[i]);
-		}
-		out_file.close();
-
-		// Print the size of the rar file from the file system
-		std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
-		std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
-		size_file.close();
-	}
-}
-
 int run(std::vector<char*> &args) {
 	// Print all the args
 	std::cout << "args: " << args.size() << std::endl;
@@ -141,6 +118,29 @@ int run(std::vector<char*> &args) {
 
 	  ErrHandler.MainExit=true;
 	  return ErrHandler.GetErrorCode();
+}
+
+void unrar_set_g_data_size(size_t size) {
+	g_data.resize(size);
+}
+
+void unrar_set_g_data_value(size_t index, uint8_t value) {
+	g_data[index] = value;
+
+	if (index == g_data.size()-1) {
+		// Copy the data array to a file
+	  std::ofstream out_file("example.rar", std::ifstream::binary);
+		for (int i=0; i<g_data.size(); ++i) {
+			//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
+			out_file << (g_data[i]);
+		}
+		out_file.close();
+
+		// Print the size of the rar file from the file system
+		std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
+		std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
+		size_file.close();
+	}
 }
 
 int unrar_extract_all_files() {
