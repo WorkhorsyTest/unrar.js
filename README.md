@@ -9,7 +9,8 @@ http://www.rarlab.com/rar/unrarsrc-5.5.3.tar.gz
 # !!!!!!!!!!!!!!!!!!!!!!
 
 ## FIXME:
-* Passing the rar file from JS to C++ is user slow, as we pass it one byte at a time.
-* RAR does not let go of file handles. So there is no way to see if files are uncompressed correctly.
+* Make it return a list of files to JS by callback
+* Remove copies of files stored in arrays, and virtual file system, and object urls.
+* Passing between C++ and JavaScript is uber slow. As we pass it one byte at a time.
 * It uses a ton or RAM, and never frees it. Like 1GB to open a 50KB file.
 * It blocks when it does anything. Add functions for Web Workers.
