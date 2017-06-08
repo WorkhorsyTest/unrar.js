@@ -158,7 +158,7 @@ int unrar_extract_file() {
 	args.push_back("./this.program");
 	args.push_back("e");
 	args.push_back("example.rar");
-	args.push_back("'page 004.png'");
+	args.push_back("page 004.png");
 
 	return run(args);
 }
