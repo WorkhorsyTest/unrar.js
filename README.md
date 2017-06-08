@@ -8,7 +8,17 @@ http://www.rarlab.com/rar/unrarsrc-5.5.3.tar.gz
 # This project is just getting started, and does not work yet!
 # !!!!!!!!!!!!!!!!!!!!!!
 
-## FIXME:
+# Build:
+```bash
+./make_web.sh
+```
+
+# Run:
+```bash
+python3 -m http.server 8000
+```
+
+# FIXME:
 * Make it return a list of files to JS by callback
 * Replace progress printing to console with callbacks
 * Have it generate a list of links to click and extract to images
