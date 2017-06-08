@@ -10,6 +10,6 @@ rm -f unrar.js
 rm -f unrar.js.map
 rm -f unrar.wasm
 rm -f unrar.wast
-cd unrar
+cd source
 make clean
 make
