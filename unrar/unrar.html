@@ -129,12 +129,13 @@
 
 		<input id="fileupload" type="file" />
 
-		<button id="button_extract_files">Extract Files</button>
-
-		<button id="button_list_extracted_files">List Extracted Files</button>
-
+		<button id="button_list_files">List Files</button>
+		<button id="button_extract_file">Extract File</button>
 		<button id="button_open_extracted_file">Open Extracted File</button>
-
+		<button id="button_list_fs_files">List FS Files</button>
+<!--
+		<button id="button_extract_files">Extract Files</button>
+-->
     <script type='text/javascript'>
 			let g_return_file_data;
 			function set_return_file_size(size) {
@@ -171,22 +172,32 @@
 				fileReader.readAsArrayBuffer(this.files[0]);
 			}, false);
 
-			var button_extract_files = document.getElementById('button_extract_files');
-			button_extract_files.addEventListener('click', function() {
-				Module.extract_files();
+			var button_list_files = document.getElementById('button_list_files');
+			button_list_files.addEventListener('click', function() {
+				Module.list_files();
 			}, false);
 
-      var button_open_extracted_file = document.getElementById('button_open_extracted_file');
+			var button_extract_file = document.getElementById('button_extract_file');
+			button_extract_file.addEventListener('click', function() {
+				Module.extract_file();
+			}, false);
+
+			var button_list_fs_files = document.getElementById('button_list_fs_files');
+			button_list_fs_files.addEventListener('click', function() {
+				Module.list_fs_files();
+			}, false);
+
+			var button_open_extracted_file = document.getElementById('button_open_extracted_file');
 			button_open_extracted_file.addEventListener('click', function() {
 				Module.open_extracted_file();
 			}, false);
 
-
-			var button_list_extracted_files = document.getElementById('button_list_extracted_files');
-			button_list_extracted_files.addEventListener('click', function() {
-				Module.list_extracted_files();
+/*
+			var button_extract_files = document.getElementById('button_extract_files');
+			button_extract_files.addEventListener('click', function() {
+				Module.extract_files();
 			}, false);
-
+*/
       var Module = {
         preRun: [],
         postRun: [],
