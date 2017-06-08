@@ -22,12 +22,10 @@ all:	unrar.js
 
 clean:
 	@rm -f *.o
-	@rm -f unrar
-	@rm -f unrar.html.map
 	@rm -f unrar.js
 	@rm -f unrar.js.map
 	@rm -f unrar.wasm
 	@rm -f unrar.wast
 
 unrar.js:	clean $(OBJECTS) $(UNRAR_OBJ)
-	$(CXX) $(CXXFLAGS) -o unrar.js $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)
+	$(CXX) $(CXXFLAGS) -o ../unrar.js $(LDFLAGS) $(DEFINES) $(OBJECTS) $(UNRAR_OBJ)
