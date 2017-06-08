@@ -15,11 +15,11 @@
 
 std::vector<uint8_t> g_data;
 
-void set_g_data_size(size_t size) {
+void unrar_set_g_data_size(size_t size) {
 	g_data.resize(size);
 }
 
-void set_g_data_value(size_t index, uint8_t value) {
+void unrar_set_g_data_value(size_t index, uint8_t value) {
 	g_data[index] = value;
 
 	if (index == g_data.size()-1) {
@@ -143,7 +143,7 @@ int run(std::vector<char*> &args) {
 	  return ErrHandler.GetErrorCode();
 }
 
-int extract_all_files() {
+int unrar_extract_all_files() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("x");
@@ -153,7 +153,7 @@ int extract_all_files() {
 	return run(args);
 }
 
-int extract_file() {
+int unrar_extract_file() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("e");
@@ -163,7 +163,7 @@ int extract_file() {
 	return run(args);
 }
 
-int list_files() {
+int unrar_list_files() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("lb");
@@ -172,7 +172,7 @@ int list_files() {
 	return run(args);
 }
 
-int list_fs_files() {
+int unrar_list_fs_files() {
 	// Print all the entries in the file system
 	DIR *dir;
 	struct dirent *ent;
@@ -205,7 +205,7 @@ int list_fs_files() {
 	return 0;
 }
 
-int open_extracted_file() {
+int unrar_open_extracted_file() {
 	std::string file_name = "page 004.png";
 
 	// Make the file readable
@@ -244,13 +244,13 @@ int open_extracted_file() {
 }
 
 EMSCRIPTEN_BINDINGS(Wrappers) {
-	emscripten::function("set_g_data_size", &set_g_data_size);
-	emscripten::function("set_g_data_value", &set_g_data_value);
-	emscripten::function("extract_all_files", &extract_all_files);
-	emscripten::function("extract_file", &extract_file);
-	emscripten::function("list_files", &list_files);
-	emscripten::function("list_fs_files", &list_fs_files);
-	emscripten::function("open_extracted_file", &open_extracted_file);
+	emscripten::function("unrar_set_g_data_size", &unrar_set_g_data_size);
+	emscripten::function("unrar_set_g_data_value", &unrar_set_g_data_value);
+	emscripten::function("unrar_extract_all_files", &unrar_extract_all_files);
+	emscripten::function("unrar_extract_file", &unrar_extract_file);
+	emscripten::function("unrar_list_files", &unrar_list_files);
+	emscripten::function("unrar_list_fs_files", &unrar_list_fs_files);
+	emscripten::function("unrar_open_extracted_file", &unrar_open_extracted_file);
 };
 
 void on_main_loop() {

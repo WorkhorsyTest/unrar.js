@@ -163,9 +163,9 @@
 				var fileReader = new FileReader();
 				fileReader.onload = function() {
 					let file_data  = new Uint8Array(this.result);
-					Module.set_g_data_size(file_data.length);
+					Module.unrar_set_g_data_size(file_data.length);
 					for (let i=0; i<file_data.length; ++i) {
-						Module.set_g_data_value(i, file_data[i]);
+						Module.unrar_set_g_data_value(i, file_data[i]);
 					}
 					//alert("Done!");
 				};
@@ -174,28 +174,28 @@
 
 			var button_list_files = document.getElementById('button_list_files');
 			button_list_files.addEventListener('click', function() {
-				Module.list_files();
+				Module.unrar_list_files();
 			}, false);
 
 			var button_extract_file = document.getElementById('button_extract_file');
 			button_extract_file.addEventListener('click', function() {
-				Module.extract_file();
+				Module.unrar_extract_file();
 			}, false);
 
 			var button_list_fs_files = document.getElementById('button_list_fs_files');
 			button_list_fs_files.addEventListener('click', function() {
-				Module.list_fs_files();
+				Module.unrar_list_fs_files();
 			}, false);
 
 			var button_open_extracted_file = document.getElementById('button_open_extracted_file');
 			button_open_extracted_file.addEventListener('click', function() {
-				Module.open_extracted_file();
+				Module.unrar_open_extracted_file();
 			}, false);
 
 /*
 			var button_extract_files = document.getElementById('button_extract_files');
 			button_extract_files.addEventListener('click', function() {
-				Module.extract_files();
+				Module.unrar_extract_files();
 			}, false);
 */
       var Module = {
