@@ -19,7 +19,6 @@ python3 -m http.server 8000
 ```
 
 # FIXME:
-* Make it return a list of files to JS by callback
 * Replace progress printing to console with callbacks
 * Have it generate a list of links to click and extract to images
 * Replace the Emscripten generated file with a simple example

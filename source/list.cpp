@@ -1,4 +1,5 @@
 #include "rar.hpp"
+#include <cwchar>
 
 static void ListFileHeader(Archive &Arc,FileHeader &hd,bool &TitleShown,bool Verbose,bool Technical,bool Bare);
 static void ListSymLink(Archive &Arc);
@@ -194,7 +195,14 @@ void ListFileHeader(Archive &Arc,FileHeader &hd,bool &TitleShown,bool Verbose,bo
 
   if (Bare)
   {
-    mprintf(L"!!! %s\n",Name);
+    //mprintf(L"!!! %s\n",Name);
+		int len = std::wcslen(Name);
+		set_return_data_size(len);
+		for (int i=0; i<len; ++i) {
+			set_return_data_value(i, Name[i]);
+		}
+
+		after_cb();
     return;
   }
 

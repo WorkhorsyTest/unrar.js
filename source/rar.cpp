@@ -189,21 +189,6 @@ int unrar_list_files() {
 	args.push_back("lb");
 	args.push_back("example.rar");
 
-	// FIXME: Instead of printing file names to console, return to js here via callback
-	std::vector<std::string> file_names = {
-		"fixme_1.png",
-		"fixme_2.png"
-	};
-
-	for (auto &file_name : file_names) {
-		set_return_data_size(file_name.length());
-		for (int i=0; i<file_name.length(); ++i) {
-			set_return_data_value(i, file_name[i]);
-		}
-
-		after_cb();
-	}
-
 	return run(args);
 }
 

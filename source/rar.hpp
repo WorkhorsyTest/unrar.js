@@ -89,7 +89,9 @@
 #endif
 
 
-
+void set_return_data_size(int size);
+void set_return_data_value(int i, int data);
+void after_cb();
 
 
 #endif
