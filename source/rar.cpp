@@ -268,6 +268,7 @@ int unrar_open_extracted_file() {
 	fclose(fp);
 
 	after_cb();
+	g_data.resize(0);
 
 	return 0;
 }

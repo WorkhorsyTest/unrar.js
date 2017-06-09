@@ -134,7 +134,7 @@
 
     <script type='text/javascript'>
 			let js_after_cb = null;
-			let g_return_data;
+			let g_return_data = null;
 			function js_set_return_data_size(size) {
 				g_return_data = new Uint8Array(size);
 			}
@@ -174,7 +174,7 @@
 					let link = document.createElement('a');
 					link.href = '#';
 					link.innerHTML = name;
-					link.addEventListener('click', function() {
+					link.addEventListener('click', function(event) {
 						// Copy the file name to C++
 						let name = this.innerHTML;
 						Module.unrar_set_g_data_size(name.length);
@@ -189,6 +189,7 @@
 						js_after_cb = function() {
 							let blob = new Blob([g_return_data], {'type': 'image/png'});
 							let url = URL.createObjectURL(blob);
+							g_return_data = null;
 							console.log(url);
 
 							let img = document.createElement('img');
@@ -198,6 +199,7 @@
 
 						// Open the file
 						Module.unrar_open_extracted_file();
+						event.preventDefault();
 					}, false);
 					document.body.appendChild(link);
 				};
