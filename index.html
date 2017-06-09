@@ -130,8 +130,6 @@
 		<input id="fileupload" type="file" />
 
 		<button id="button_list_files">List Files</button>
-		<button id="button_extract_file">Extract File</button>
-		<button id="button_open_extracted_file">Open Extracted File</button>
 		<button id="button_list_fs_files">List FS Files</button>
 
     <script type='text/javascript'>
@@ -157,6 +155,7 @@
 					for (let i=0; i<file_data.length; ++i) {
 						Module.unrar_set_g_data_value(i, file_data[i]);
 					}
+					Module.unrar_copy_data_to_file();
 					//alert("Done!");
 				};
 				fileReader.readAsArrayBuffer(this.files[0]);
@@ -165,19 +164,45 @@
 			var button_list_files = document.getElementById('button_list_files');
 			button_list_files.addEventListener('click', function() {
 				js_after_cb = function() {
-					var name = '';
-					for (var i=0; i<g_return_data.length; ++i) {
+					let name = '';
+					for (let i=0; i<g_return_data.length; ++i) {
 						name += String.fromCharCode(g_return_data[i]);
 					}
-					console.log(name);
+
+					document.body.appendChild(document.createElement('br'));
+
+					let link = document.createElement('a');
+					link.href = '#';
+					link.innerHTML = name;
+					link.addEventListener('click', function() {
+						// Copy the file name to C++
+						let name = this.innerHTML;
+						Module.unrar_set_g_data_size(name.length);
+						for (let i=0; i<name.length; ++i) {
+							Module.unrar_set_g_data_value(i, name.charCodeAt(i));
+						}
+
+						// Extract the file
+						Module.unrar_extract_file();
+
+						// After opening the file, load it into an image
+						js_after_cb = function() {
+							let blob = new Blob([g_return_data], {'type': 'image/png'});
+							let url = URL.createObjectURL(blob);
+							console.log(url);
+
+							let img = document.createElement('img');
+							img.src = url;
+							document.body.appendChild(img);
+						};
+
+						// Open the file
+						Module.unrar_open_extracted_file();
+					}, false);
+					document.body.appendChild(link);
 				};
 
 				Module.unrar_list_files();
-			}, false);
-
-			var button_extract_file = document.getElementById('button_extract_file');
-			button_extract_file.addEventListener('click', function() {
-				Module.unrar_extract_file();
 			}, false);
 
 			var button_list_fs_files = document.getElementById('button_list_fs_files');
@@ -185,20 +210,6 @@
 				Module.unrar_list_fs_files();
 			}, false);
 
-			var button_open_extracted_file = document.getElementById('button_open_extracted_file');
-			button_open_extracted_file.addEventListener('click', function() {
-				js_after_cb = function() {
-					let blob = new Blob([g_return_data], {'type': 'image/png'});
-					let url = URL.createObjectURL(blob);
-					console.log(url);
-
-					let img = document.createElement('img');
-					img.src = url;
-					document.body.appendChild(img);
-				};
-
-				Module.unrar_open_extracted_file();
-			}, false);
 
       var Module = {
         preRun: [],

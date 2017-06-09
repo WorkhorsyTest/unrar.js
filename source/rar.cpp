@@ -126,21 +126,21 @@ void unrar_set_g_data_size(size_t size) {
 
 void unrar_set_g_data_value(size_t index, uint8_t value) {
 	g_data[index] = value;
+}
 
-	if (index == g_data.size()-1) {
-		// Copy the data array to a file
-	  std::ofstream out_file("example.rar", std::ifstream::binary);
-		for (int i=0; i<g_data.size(); ++i) {
-			//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
-			out_file << (g_data[i]);
-		}
-		out_file.close();
-
-		// Print the size of the rar file from the file system
-		std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
-		std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
-		size_file.close();
+void unrar_copy_data_to_file() {
+	// Copy the data array to a file
+  std::ofstream out_file("example.rar", std::ifstream::binary);
+	for (int i=0; i<g_data.size(); ++i) {
+		//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
+		out_file << (g_data[i]);
 	}
+	out_file.close();
+
+	// Print the size of the rar file from the file system
+	std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
+	std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
+	size_file.close();
 }
 
 int unrar_extract_all_files() {
@@ -154,11 +154,18 @@ int unrar_extract_all_files() {
 }
 
 int unrar_extract_file() {
+	// Get the file name
+	std::string file_name = "";
+	for (int i=0; i<g_data.size(); ++i) {
+		file_name += g_data[i];
+	}
+	//std::cout << "!!! file_name: " << file_name << std::endl;
+
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("e");
 	args.push_back("example.rar");
-	args.push_back("page 004.png");
+	args.push_back((char*)file_name.c_str());
 
 	return run(args);
 }
@@ -226,7 +233,11 @@ int unrar_list_fs_files() {
 }
 
 int unrar_open_extracted_file() {
-	std::string file_name = "page 004.png";
+	// Get the file name
+	std::string file_name = "";
+	for (int i=0; i<g_data.size(); ++i) {
+		file_name += g_data[i];
+	}
 
 	// Make the file readable
 	if (chmod(file_name.c_str(), S_IRUSR|S_IRGRP|S_IROTH) == -1) {
@@ -264,6 +275,7 @@ int unrar_open_extracted_file() {
 EMSCRIPTEN_BINDINGS(Wrappers) {
 	emscripten::function("unrar_set_g_data_size", &unrar_set_g_data_size);
 	emscripten::function("unrar_set_g_data_value", &unrar_set_g_data_value);
+	emscripten::function("unrar_copy_data_to_file", &unrar_copy_data_to_file);
 	emscripten::function("unrar_extract_all_files", &unrar_extract_all_files);
 	emscripten::function("unrar_extract_file", &unrar_extract_file);
 	emscripten::function("unrar_list_files", &unrar_list_files);
