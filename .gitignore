@@ -1,4 +1,4 @@
-unrar/*.o
+*.o
 unrar.js
 unrar.js.map
 unrar.wasm

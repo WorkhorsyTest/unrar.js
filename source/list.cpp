@@ -194,7 +194,7 @@ void ListFileHeader(Archive &Arc,FileHeader &hd,bool &TitleShown,bool Verbose,bo
 
   if (Bare)
   {
-    mprintf(L"%s\n",Name);
+    mprintf(L"!!! %s\n",Name);
     return;
   }
 

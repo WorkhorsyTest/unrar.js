@@ -163,11 +163,49 @@ int unrar_extract_file() {
 	return run(args);
 }
 
+void set_return_data_size(int size) {
+	EM_ASM_({
+		js_set_return_data_size($0);
+	}, size);
+}
+
+void set_return_data_value(int i, int data) {
+	EM_ASM_({
+		js_set_return_data_value($0, $1);
+	}, i, data);
+}
+
+void set_return_data_as_image() {
+	EM_ASM_({
+		js_set_return_data_as_image();
+	}, 0);
+}
+
+void cb_file_name() {
+	EM_ASM_({
+		js_cb_file_name();
+	}, 0);
+}
+
 int unrar_list_files() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("lb");
 	args.push_back("example.rar");
+
+	// FIXME: Instead of printing file names to console, return to js here via callback
+	std::vector<std::string> file_names = {
+		"fixme_1.png",
+		"fixme_2.png"
+	};
+
+	for (auto &file_name : file_names) {
+		set_return_data_size(file_name.length());
+		for (int i=0; i<file_name.length(); ++i) {
+			set_return_data_value(i, file_name[i]);
+		}
+		cb_file_name();
+	}
 
 	return run(args);
 }
@@ -225,20 +263,17 @@ int unrar_open_extracted_file() {
 	fseek(fp, 0L, SEEK_END);
 	int sz = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
-	EM_ASM_({
-		set_return_file_size($0);
-	}, sz);
+	set_return_data_size(sz);
 
 	// Send the file, one byte at a time
 	unsigned char buffer;
 	int i = 0;
 	while (fread(&buffer, 1, 1, fp)) {
-		EM_ASM_({
-	    set_return_file_data($0, $1);
-	  }, i, (int) buffer);
+		set_return_data_value(i, (int) buffer);
 		i++;
 	}
 	fclose(fp);
+	set_return_data_as_image();
 
 	return 0;
 }
