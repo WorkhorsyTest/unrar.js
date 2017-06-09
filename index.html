@@ -133,9 +133,7 @@
 		<button id="button_extract_file">Extract File</button>
 		<button id="button_open_extracted_file">Open Extracted File</button>
 		<button id="button_list_fs_files">List FS Files</button>
-<!--
-		<button id="button_extract_files">Extract Files</button>
--->
+
     <script type='text/javascript'>
 			let js_after_cb = null;
 			let g_return_data;
@@ -202,12 +200,6 @@
 				Module.unrar_open_extracted_file();
 			}, false);
 
-/*
-			var button_extract_files = document.getElementById('button_extract_files');
-			button_extract_files.addEventListener('click', function() {
-				Module.unrar_extract_files();
-			}, false);
-*/
       var Module = {
         preRun: [],
         postRun: [],
