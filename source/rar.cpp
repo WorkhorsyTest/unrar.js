@@ -175,12 +175,6 @@ void set_return_data_value(int i, int data) {
 	}, i, data);
 }
 
-void set_return_data_as_image() {
-	EM_ASM_({
-		js_set_return_data_as_image();
-	}, 0);
-}
-
 void after_cb() {
 	EM_ASM_({
 		if (js_after_cb) {
