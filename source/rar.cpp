@@ -181,9 +181,11 @@ void set_return_data_as_image() {
 	}, 0);
 }
 
-void cb_file_name() {
+void after_cb() {
 	EM_ASM_({
-		js_cb_file_name();
+		if (js_after_cb) {
+			js_after_cb();
+		}
 	}, 0);
 }
 
@@ -204,7 +206,8 @@ int unrar_list_files() {
 		for (int i=0; i<file_name.length(); ++i) {
 			set_return_data_value(i, file_name[i]);
 		}
-		cb_file_name();
+
+		after_cb();
 	}
 
 	return run(args);
@@ -273,7 +276,8 @@ int unrar_open_extracted_file() {
 		i++;
 	}
 	fclose(fp);
-	set_return_data_as_image();
+
+	after_cb();
 
 	return 0;
 }

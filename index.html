@@ -137,28 +137,13 @@
 		<button id="button_extract_files">Extract Files</button>
 -->
     <script type='text/javascript'>
+			let js_after_cb = null;
 			let g_return_data;
 			function js_set_return_data_size(size) {
 				g_return_data = new Uint8Array(size);
 			}
 			function js_set_return_data_value(index, data) {
 				g_return_data[index] = data;
-			}
-			function js_set_return_data_as_image() {
-				let blob = new Blob([g_return_data], {'type': 'image/png'});
-				let url = URL.createObjectURL(blob);
-				console.log(url);
-
-				let img = document.createElement('img');
-				img.src = url;
-				document.body.appendChild(img);
-			}
-			function js_cb_file_name() {
-				var name = '';
-				for (var i=0; i<g_return_data.length; ++i) {
-					name += String.fromCharCode(g_return_data[i]);
-				}
-				console.log(name);
 			}
 
       var statusElement = document.getElementById('status');
@@ -181,6 +166,14 @@
 
 			var button_list_files = document.getElementById('button_list_files');
 			button_list_files.addEventListener('click', function() {
+				js_after_cb = function() {
+					var name = '';
+					for (var i=0; i<g_return_data.length; ++i) {
+						name += String.fromCharCode(g_return_data[i]);
+					}
+					console.log(name);
+				};
+
 				Module.unrar_list_files();
 			}, false);
 
@@ -196,6 +189,16 @@
 
 			var button_open_extracted_file = document.getElementById('button_open_extracted_file');
 			button_open_extracted_file.addEventListener('click', function() {
+				js_after_cb = function() {
+					let blob = new Blob([g_return_data], {'type': 'image/png'});
+					let url = URL.createObjectURL(blob);
+					console.log(url);
+
+					let img = document.createElement('img');
+					img.src = url;
+					document.body.appendChild(img);
+				};
+
 				Module.unrar_open_extracted_file();
 			}, false);
 
