@@ -19,6 +19,8 @@ python3 -m http.server 8000
 ```
 
 # FIXME:
+* Make a simple library for passing data between C++ and JS
+* Remove vector, string, iostream to make wasm smaller
 * Replace progress printing to console with callbacks
 * Have it generate a list of links to click and extract to images
 * Replace the Emscripten generated file with a simple example
