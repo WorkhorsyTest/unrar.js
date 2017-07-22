@@ -6,6 +6,7 @@ set -e
 # Setup Emscripten/WebAssembly SDK
 source ../emsdk/emsdk_env.sh
 
+rm -f source/*.o
 rm -f unrar.js
 rm -f unrar.js.map
 rm -f unrar.wasm

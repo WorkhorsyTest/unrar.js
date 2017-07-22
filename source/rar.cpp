@@ -1,6 +1,6 @@
 #include "rar.hpp"
 
-#include <fstream>
+//#include <fstream>
 #include <string>
 #include <vector>
 
@@ -130,17 +130,18 @@ void unrar_set_g_data_value(size_t index, uint8_t value) {
 
 void unrar_copy_data_to_file() {
 	// Copy the data array to a file
-  std::ofstream out_file("example.rar", std::ifstream::binary);
-	for (int i=0; i<g_data.size(); ++i) {
-		//std::cout << "    rar_file_data[" << i << "]: " << (rar_file_data[i]) << std::endl;
-		out_file << (g_data[i]);
-	}
-	out_file.close();
+	FILE* write_ptr;
+	write_ptr = fopen("example.rar", "wb");
+	fwrite(g_data.data(), sizeof(g_data[0]) * g_data.size(), 1, write_ptr);
+	fclose(write_ptr);
 
+	g_data.resize(0);
+/*
 	// Print the size of the rar file from the file system
 	std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
 	std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
 	size_file.close();
+*/
 }
 
 int unrar_extract_all_files() {
@@ -238,6 +239,7 @@ int unrar_open_extracted_file() {
 	for (int i=0; i<g_data.size(); ++i) {
 		file_name += g_data[i];
 	}
+	//std::cout << "!!! file_name: " << file_name << std::endl;
 
 	// Make the file readable
 	if (chmod(file_name.c_str(), S_IRUSR|S_IRGRP|S_IROTH) == -1) {
