@@ -20,11 +20,8 @@ python3 -m http.server 8000
 
 # FIXME:
 * Make a simple library for passing data between C++ and JS
-* Remove vector, string, iostream to make wasm smaller
+* Remove vector, string to make wasm smaller
 * Replace progress printing to console with callbacks
-* Have it generate a list of links to click and extract to images
 * Replace the Emscripten generated file with a simple example
-* Remove copies of files stored in arrays, and virtual file system, and object urls.
 * Passing between C++ and JavaScript is uber slow. As we pass it one byte at a time.
-* It uses a ton or RAM, and never frees it. Like 1GB to open a 50KB file.
 * It blocks when it does anything. Add functions for Web Workers.
