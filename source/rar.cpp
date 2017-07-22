@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-std::vector<uint8_t> g_data;
+std::vector<uint8_t> g_arg;
 
 int run(std::vector<char*> &args) {
 	// Print all the args
@@ -120,22 +120,22 @@ int run(std::vector<char*> &args) {
 	  return ErrHandler.GetErrorCode();
 }
 
-void unrar_set_g_data_size(size_t size) {
-	g_data.resize(size);
+void unrar_set_arg_size(size_t size) {
+	g_arg.resize(size);
 }
 
-void unrar_set_g_data_value(size_t index, uint8_t value) {
-	g_data[index] = value;
+void unrar_set_arg_value(size_t index, uint8_t value) {
+	g_arg[index] = value;
 }
 
-void unrar_copy_data_to_file() {
+void unrar_archive_load() {
 	// Copy the data array to a file
 	FILE* write_ptr;
 	write_ptr = fopen("example.rar", "wb");
-	fwrite(g_data.data(), sizeof(g_data[0]) * g_data.size(), 1, write_ptr);
+	fwrite(g_arg.data(), sizeof(g_arg[0]) * g_arg.size(), 1, write_ptr);
 	fclose(write_ptr);
 
-	g_data.resize(0);
+	g_arg.resize(0);
 
 /*
 	// Print the size of the rar file from the file system
@@ -145,7 +145,7 @@ void unrar_copy_data_to_file() {
 */
 }
 
-int unrar_delete_rar_file() {
+int unrar_archive_unload() {
 	if (remove("example.rar") != 0) {
 		printf("!!! Failed to delete file");
 	}
@@ -153,7 +153,7 @@ int unrar_delete_rar_file() {
 	return 0;
 }
 
-int unrar_extract_all_files() {
+int unrar_archive_extract_all() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("x");
@@ -163,11 +163,11 @@ int unrar_extract_all_files() {
 	return run(args);
 }
 
-int unrar_extract_file() {
+int unrar_archive_extract_one() {
 	// Get the file name
 	std::string file_name = "";
-	for (int i=0; i<g_data.size(); ++i) {
-		file_name += g_data[i];
+	for (int i=0; i<g_arg.size(); ++i) {
+		file_name += g_arg[i];
 	}
 	//std::cout << "!!! file_name: " << file_name << std::endl;
 
@@ -200,7 +200,7 @@ void after_cb() {
 	}, 0);
 }
 
-int unrar_list_files() {
+int unrar_archive_list_files() {
 	std::vector<char*> args;
 	args.push_back("./this.program");
 	args.push_back("lb");
@@ -209,7 +209,7 @@ int unrar_list_files() {
 	return run(args);
 }
 
-int unrar_list_fs_files() {
+int unrar_fs_list_files() {
 	// Print all the entries in the file system
 	DIR *dir;
 	struct dirent *ent;
@@ -242,11 +242,11 @@ int unrar_list_fs_files() {
 	return 0;
 }
 
-int unrar_open_extracted_file() {
+int unrar_fs_open_file() {
 	// Get the file name
 	std::string file_name = "";
-	for (int i=0; i<g_data.size(); ++i) {
-		file_name += g_data[i];
+	for (int i=0; i<g_arg.size(); ++i) {
+		file_name += g_arg[i];
 	}
 	//std::cout << "!!! file_name: " << file_name << std::endl;
 
@@ -279,21 +279,21 @@ int unrar_open_extracted_file() {
 	fclose(fp);
 
 	after_cb();
-	g_data.resize(0);
+	g_arg.resize(0);
 
 	return 0;
 }
 
 EMSCRIPTEN_BINDINGS(Wrappers) {
-	emscripten::function("unrar_set_g_data_size", &unrar_set_g_data_size);
-	emscripten::function("unrar_set_g_data_value", &unrar_set_g_data_value);
-	emscripten::function("unrar_copy_data_to_file", &unrar_copy_data_to_file);
-	emscripten::function("unrar_extract_all_files", &unrar_extract_all_files);
-	emscripten::function("unrar_extract_file", &unrar_extract_file);
-	emscripten::function("unrar_list_files", &unrar_list_files);
-	emscripten::function("unrar_list_fs_files", &unrar_list_fs_files);
-	emscripten::function("unrar_open_extracted_file", &unrar_open_extracted_file);
-	emscripten::function("unrar_delete_rar_file", &unrar_delete_rar_file);
+	emscripten::function("unrar_set_arg_size", &unrar_set_arg_size);
+	emscripten::function("unrar_set_arg_value", &unrar_set_arg_value);
+	emscripten::function("unrar_archive_load", &unrar_archive_load);
+	emscripten::function("unrar_archive_unload", &unrar_archive_unload);
+	emscripten::function("unrar_archive_extract_all", &unrar_archive_extract_all);
+	emscripten::function("unrar_archive_extract_one", &unrar_archive_extract_one);
+	emscripten::function("unrar_archive_list_files", &unrar_archive_list_files);
+	emscripten::function("unrar_fs_list_files", &unrar_fs_list_files);
+	emscripten::function("unrar_fs_open_file", &unrar_fs_open_file);
 };
 
 void on_main_loop() {
