@@ -131,6 +131,7 @@
 
 		<button id="button_list_files">List Files</button>
 		<button id="button_list_fs_files">List FS Files</button>
+		<button id="button_delete_rar_file">Delete RAR File</button>
 
     <script type='text/javascript'>
 			let js_after_cb = null;
@@ -213,6 +214,10 @@
 				Module.unrar_list_fs_files();
 			}, false);
 
+			let button_delete_rar_file = document.getElementById('button_delete_rar_file');
+			button_delete_rar_file.addEventListener('click', function() {
+				Module.unrar_delete_rar_file();
+			}, false);
 
       var Module = {
         preRun: [],

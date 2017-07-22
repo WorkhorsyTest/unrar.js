@@ -136,12 +136,21 @@ void unrar_copy_data_to_file() {
 	fclose(write_ptr);
 
 	g_data.resize(0);
+
 /*
 	// Print the size of the rar file from the file system
 	std::ifstream size_file("example.rar", std::ifstream::ate | std::ifstream::binary);
 	std::cout << "size_file.tellg: " << size_file.tellg() << std::endl;
 	size_file.close();
 */
+}
+
+int unrar_delete_rar_file() {
+	if (remove("example.rar") != 0) {
+		printf("!!! Failed to delete file");
+	}
+
+	return 0;
 }
 
 int unrar_extract_all_files() {
@@ -284,6 +293,7 @@ EMSCRIPTEN_BINDINGS(Wrappers) {
 	emscripten::function("unrar_list_files", &unrar_list_files);
 	emscripten::function("unrar_list_fs_files", &unrar_list_fs_files);
 	emscripten::function("unrar_open_extracted_file", &unrar_open_extracted_file);
+	emscripten::function("unrar_delete_rar_file", &unrar_delete_rar_file);
 };
 
 void on_main_loop() {
