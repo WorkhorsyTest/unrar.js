@@ -142,13 +142,13 @@
 				g_return_data[index] = data;
 			}
 
-      var statusElement = document.getElementById('status');
-      var progressElement = document.getElementById('progress');
-      var spinnerElement = document.getElementById('spinner');
+      let statusElement = document.getElementById('status');
+      let progressElement = document.getElementById('progress');
+      let spinnerElement = document.getElementById('spinner');
 
-			var fileupload = document.getElementById('fileupload');
+			let fileupload = document.getElementById('fileupload');
 			fileupload.addEventListener('change', function(event) {
-				var file_reader = new FileReader();
+				let file_reader = new FileReader();
 				file_reader.onload = function(e) {
 					let file_data = new Uint8Array(e.target.result);
 					Module.unrar_set_g_data_size(file_data.length);
@@ -162,7 +162,7 @@
 				file_reader.readAsArrayBuffer(event.target.files[0]);
 			}, false);
 
-			var button_list_files = document.getElementById('button_list_files');
+			let button_list_files = document.getElementById('button_list_files');
 			button_list_files.addEventListener('click', function() {
 				js_after_cb = function() {
 					let name = '';
@@ -208,7 +208,7 @@
 				Module.unrar_list_files();
 			}, false);
 
-			var button_list_fs_files = document.getElementById('button_list_fs_files');
+			let button_list_fs_files = document.getElementById('button_list_fs_files');
 			button_list_fs_files.addEventListener('click', function() {
 				Module.unrar_list_fs_files();
 			}, false);
