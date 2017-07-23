@@ -19,6 +19,9 @@ python3 -m http.server 8000
 ```
 
 # FIXME:
+* Change to be a module, rather than emscripten main loop
+* extract one file at a time
+
 * Make a simple library for passing data between C++ and JS
 * Remove vector, string to make wasm smaller
 * Replace progress printing to console with callbacks
