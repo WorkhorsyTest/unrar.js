@@ -8,6 +8,7 @@
 #include <emscripten/bind.h>
 
 #include <stdio.h>
+#include <libgen.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -250,14 +251,19 @@ int unrar_fs_open_file() {
 	}
 	//std::cout << "!!! file_name: " << file_name << std::endl;
 
+	// Get the base file name
+	char* fuck = basename((char*)file_name.c_str());
+	std::string base_file_name(fuck);
+	//std::cout << "!!! base_file_name: " << base_file_name << std::endl;
+
 	// Make the file readable
-	if (chmod(file_name.c_str(), S_IRUSR|S_IRGRP|S_IROTH) == -1) {
+	if (chmod(base_file_name.c_str(), S_IRUSR|S_IRGRP|S_IROTH) == -1) {
 		perror ("!!! Failed to chown");
 	  return EXIT_FAILURE;
 	}
 
 	// Open the file
-	FILE *fp = fopen(file_name.c_str(), "r");
+	FILE *fp = fopen(base_file_name.c_str(), "r");
 	if (fp == NULL) {
 		perror ("!!! Failed to open file");
 		return EXIT_FAILURE;
