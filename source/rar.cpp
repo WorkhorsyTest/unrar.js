@@ -148,7 +148,8 @@ void unrar_archive_load() {
 
 int unrar_archive_unload() {
 	if (remove("example.rar") != 0) {
-		printf("!!! Failed to delete file");
+		perror ("!!! Failed to delete file");
+		return EXIT_FAILURE;
 	}
 
 	return 0;
