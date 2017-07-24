@@ -253,8 +253,7 @@ int unrar_fs_open_file() {
 	//std::cout << "!!! file_name: " << file_name << std::endl;
 
 	// Get the base file name
-	char* fuck = basename((char*)file_name.c_str());
-	std::string base_file_name(fuck);
+	std::string base_file_name((char*)file_name.c_str());
 	//std::cout << "!!! base_file_name: " << base_file_name << std::endl;
 
 	// Make the file readable
