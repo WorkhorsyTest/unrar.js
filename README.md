@@ -8,6 +8,14 @@ http://www.rarlab.com/rar/unrarsrc-5.5.3.tar.gz
 # This project is just getting started, and does not work yet!
 # !!!!!!!!!!!!!!!!!!!!!!
 
+# Install WebAssembly:
+```bash
+git clone https://github.com/juj/emsdk.git
+cd emsdk
+./emsdk install sdk-incoming-64bit binaryen-master-64bit
+./emsdk activate sdk-incoming-64bit binaryen-master-64bit
+```
+
 # Build:
 ```bash
 ./make_web.sh
